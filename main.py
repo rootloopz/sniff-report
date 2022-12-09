@@ -42,9 +42,8 @@ class Command(object):
 
 
 def run_cpp():
-    command = Command("sudo apt update")
-    command.run(timeout=3)
-    command.run(timeout=1)
+    command = Command("sudo ./probe")
+    command.run(timeout=30)
 
 # Function to grab data from jsonl
 def grab_data():
@@ -64,8 +63,6 @@ def grab_data():
         if str(items['ssid']) != "NULL":
             s1 = known_ssid(items['src_addr'], items['timestamp'], items['ssid'])
             ssid_list.append(s1)
-    print(ssid_list[4].mac)
-    print(known_list[4].mac)
     return data, known_list, ssid_list
 
 def check_oui():
@@ -117,7 +114,7 @@ def index():
 @app.route("/run")
 def run():
     run_cpp()
-    return render_template('run.html')
+    return render_template('index.html')
 
 @app.route("/report/")
 def report():

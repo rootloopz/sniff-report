@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <tins/packet.h>
 
 using namespace std;
 using namespace Tins;
@@ -69,7 +70,10 @@ string parse_probe(const Packet &packet) {
       << partial_parse_radiotap(packet) << ","
       << "\"src_addr\":\"" << src_addr << "\","
       << "\"ssid\":\"" << ssid << "\""
-      << "}";
+      << "}\n";
+  ofstream myfile("out.jsonl", ios::app);
+  myfile << ss.rdbuf();
+  myfile.close();
   } catch (...) {
   }
   return ss.str();
@@ -105,17 +109,18 @@ int main(int argc, char *argv[])
   Sniffer sniffer(interface, config);
   ofstream myfile;
   myfile.open("out.jsonl");
+  
 
   while (true) {
+    
     try {
       Packet packet = sniffer.next_packet();
       if (packet) {
-        myfile << println(parse_probe(packet));
+        println(parse_probe(packet));
       }
     } catch (...) {
     }
   }
-  myfile.close();
 
   return 0;
 }
