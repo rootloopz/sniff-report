@@ -1,44 +1,29 @@
 # Sniff-n-Report
 
-A C++ SSID sniffer data, interactable web interface.
+Sniff-Report is a tool that monitors WiFi signals sent by devices (cell phones, access points, etc) and has a web interface that is used to control the program and organize the data. 
 
-## Description
+## Disclaimer
 
-An in-depth paragraph about your project and overview of use.
+This tool is intended for educational purposes only, showing users the risks that come with easily identifiable SSIDs and leaving devices WiFi powered on when in not in use.
 
 ## Getting Started
 
-### Dependencies
+Currently this project will most likely only run on Linux based machines (to change in the future):
 
-* Currently requires linux.
+```
+git clone https://github.com/rootloopz/sniff-report.git
+cd sniff-report
+python3 install.py (NOT IMPLEMENTED YET, to run web interface )
+```
+
+## Requirements
+
+* Flask
+* libtins
 * Monitor mode interface
-* ex. Windows 10
-
-### Installing
-
-* How/where to download your program
-* Any modifications needed to be made to files/folders
-
-### Executing program
-
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
-
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
-
-## License
-
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
 
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [libtins C++ Socket/802.11 Library](http://libtins.github.io/)# sniff-n-report
+* [libtins C++ Socket/802.11 Library](http://libtins.github.io/)
+* [heyyou SSID Sniffer](https://github.com/abzicht/heyyou)
