@@ -1,6 +1,6 @@
 # Sniff-n-Report
 
-Sniff-Report is a tool that monitors WiFi signals sent by devices (cell phones, access points, etc) and has a web interface that is used to control the program and organize the data. 
+Sniff-Report is a tool that monitors WiFi signals sent by devices (cell phones, access points, etc) and has a simple to use command line interface. 
 
 ## Disclaimer
 
@@ -13,12 +13,13 @@ Currently this project will most likely only run on Linux based machines (to cha
 ```
 git clone https://github.com/rootloopz/sniff-report.git
 cd sniff-report
-python3 install.py (NOT IMPLEMENTED YET, to run web interface )
+sudo bash setup.sh
+g++ main.cpp -std=c++11 -ltins -o sniff-report
 ```
 
 ## Requirements
 
-* Flask
+* Linux device
 * libtins
 * Monitor mode interface
 

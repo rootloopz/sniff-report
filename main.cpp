@@ -66,14 +66,11 @@ string parse_probe(const Packet &packet) {
       ssid = "NULL";
     }
     HWAddress<6> src_addr = get_src_addr(data);
-    ss << "{"
+      ss << "{"
       << partial_parse_radiotap(packet) << ","
       << "\"src_addr\":\"" << src_addr << "\","
       << "\"ssid\":\"" << ssid << "\""
       << "}\n";
-  ofstream myfile("out.jsonl", ios::app);
-  myfile << ss.rdbuf();
-  myfile.close();
   } catch (...) {
   }
   return ss.str();
@@ -97,26 +94,35 @@ string println(string str) {
 
 int main(int argc, char *argv[])
 {
+  int limit = 1000;
   string interface = "wlx00c0cab05cec";
-  if (argc > 1) {
+  if (argc > 2) {
     interface = argv[1];
+    limit = atoi(argv[2]);
+  } else {
+    cerr << "Format error: " << "\n";
+    cerr << "Usage: sudo ./sniff-report <interface> <packet limit>";
+    return 1;
   }
+
+  int count = 0;
 
   SnifferConfiguration config;
   config.set_promisc_mode(true);
   config.set_rfmon(true);
   config.set_filter("type data or type mgt subtype probe-req or type mgt subtype beacon");
   Sniffer sniffer(interface, config);
-  ofstream myfile;
-  myfile.open("out.jsonl");
   
 
   while (true) {
     
     try {
       Packet packet = sniffer.next_packet();
-      if (packet) {
-        println(parse_probe(packet));
+    
+      //checking if packet has data we care about from parse_probe function
+      if (parse_probe(packet) != "") {
+        cout << count << ": " << parse_probe(packet) << endl;
+        count++;
       }
     } catch (...) {
     }

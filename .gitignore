@@ -5,3 +5,5 @@ venv/
 .jsonl
 __pycache__/
 __pycache__
+.jsonl
+sniff-report
