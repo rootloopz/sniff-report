@@ -13,8 +13,9 @@ Currently this project will most likely only run on Linux based machines (to cha
 ```
 git clone https://github.com/rootloopz/sniff-report.git
 cd sniff-report
-sudo bash setup.sh
+bash setup.sh
 g++ main.cpp -std=c++11 -ltins -o sniff-report
+sudo ./sniff-report <interface> <number of packets>
 ```
 
 ## Requirements
