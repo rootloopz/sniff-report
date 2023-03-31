@@ -1,6 +1,7 @@
 #include "tins/tins.h"
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <tins/packet.h>
 #include <tins/sniffer.h>
@@ -44,7 +45,7 @@ string parse_probe(const Packet &packet) {
 
 int main(int argc, char *argv[]) {
   int limit = 1000;
-  string interface = "wlx00c0cab05cec";
+  string interface = "";
   if (argc > 2) {
     interface = argv[1];
     limit = atoi(argv[2]);
@@ -63,25 +64,60 @@ int main(int argc, char *argv[]) {
   config.set_filter("type data or type mgt subtype probe-req or type mgt subtype beacon");
   Sniffer sniffer(interface, config);
 
-  bool running = true;
-  while (running) {
+  // Table setup for output
+cout << left << setw(10) << "Count"
+     << left << setw(20) << "Timestamp"
+     << left << setw(30) << "Src Address"
+     << left << setw(30) << "SSID"
+     << left << setw(20) << "Signal (dBm)"
+     << left << setw(20) << "Rate (Mbps)"
+     << left << setw(20) << "Channel Freq (MHz)" << endl;
 
-    if (count >= limit) {
-      running = false;
-      break;
-    }
-    try {
-      Packet packet = sniffer.next_packet();
+cout << setfill('-') << setw(150) << "-" << setfill(' ') << endl;
 
-      // checking if packet has data we care about from parse_probe function
-      if (parse_probe(packet) != "") {
-        cout << count << ": " << parse_probe(packet) << endl;
-        count++;
-      }
-
-    } catch (...) {
-    }
+bool running = true;
+while (running) {
+  if (count >= limit) {
+    running = false;
+    break;
   }
 
+  try {
+    Packet packet = sniffer.next_packet();
+
+    // checking if packet has data we care about from parse_probe function
+    if (parse_probe(packet) != "") {
+      string parse_result = parse_probe(packet);
+      stringstream ss(parse_result);
+      string timestamp, src_addr, ssid, dbm_signal, rate, channel_freq;
+      getline(ss, timestamp, ' ');
+      getline(ss, src_addr, ' ');
+      getline(ss, ssid, ' ');
+      getline(ss, dbm_signal, ' ');
+      getline(ss, rate, ' ');
+      getline(ss, channel_freq, ' ');
+
+      // Extract the value after the colon
+      timestamp = timestamp.substr(timestamp.find(":") + 1);
+      src_addr = src_addr.substr(src_addr.find(":") + 1);
+      ssid = ssid.substr(ssid.find(":") + 1);
+      dbm_signal = dbm_signal.substr(dbm_signal.find(":") + 1);
+      rate = rate.substr(rate.find(":") + 1);
+      channel_freq = channel_freq.substr(channel_freq.find(":") + 1);
+
+      // Print values in a tabular format
+      cout << left << setw(10) << count
+           << left << setw(20) << timestamp
+           << left << setw(30) << src_addr
+           << left << setw(30) << ssid
+           << left << setw(20) << dbm_signal
+           << left << setw(20) << rate
+           << left << setw(20) << channel_freq << endl;
+
+      count++;
+    }
+  } catch (...) {
+  }
+}
   return 0;
 }
